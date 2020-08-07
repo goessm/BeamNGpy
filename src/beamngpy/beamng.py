@@ -698,6 +698,11 @@ class BeamNGpy:
         data = dict(type='Resume')
         self.send(data)
 
+    @ack('EnabledVehicleStatsLogging')
+    def enable_vehicle_stats_logging(self):
+        data = dict(type="EnableVehicleStatsLogging")
+        self.send(data)
+
     def poll_sensors(self, vehicle):
         """
         Retrieves sensor values for the sensors attached to the given vehicle.

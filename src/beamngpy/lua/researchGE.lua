@@ -395,6 +395,11 @@ M.handleDespawnVehicle = function(msg)
   rcom.sendACK(skt, 'VehicleDespawned')
 end
 
+M.handleEnableVehicleStatsLogging = function(msg)
+  extensions.enable('vehicleStatsLogger')
+  rcom.sendACK(skt, 'EnabledVehicleStatsLogging')
+end
+
 sensors.Camera = function(req, callback)
   local offset, orientation, up
   local pos, direction, rot, fov, resolution, nearFar, vehicle, vehicleObj, data
