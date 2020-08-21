@@ -66,4 +66,16 @@ $ThisPrefab = new SimGroup() {
         {% endfor %}
     };
     {% endfor %}
+
+    {% for waypoint in waypoints %}
+    new BeamNGWaypoint(waypoint_{{waypoint.waypoint_id}}) {
+        drawDebug = "{{waypoint.drawDebug}}";
+        directionalWaypoint = "{{waypoint.directionalWaypoint}}";
+        position = "{{waypoint.position[0]}} {{waypoint.position[1]}} {{waypoint.position[2]}}";
+        scale = "{{waypoint.scale}}";
+        rotationMatrix = "{{waypoint.rotationMatrix}}";
+        canSave = "{{waypoint.canSave}}";
+        canSaveDynamicFields = "{{waypoint.canSaveDynamicFields}}";
+        };
+        {% endfor %}
 };

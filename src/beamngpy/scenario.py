@@ -112,6 +112,23 @@ class Road:
 
         self.nodes = list()
 
+class Waypoint:
+    """
+    This class represents a Waypoint
+
+
+    """
+
+    def __init__(self, waypoint_id, position, scale, **options):
+        self.waypoint_id = waypoint_id
+        self.drawDebug = options.get('drawDebug', 1)
+        self.directionalWaypoint = options.get('directionalWaypoint', 0)
+        self.position = position
+        self.scale = scale
+        self.rotationMatrix = options.get('rotationMatrix', '1 0 0 0 1 0 0 0 1')
+        self.canSave = options.get('canSave', 1)
+        self.canSaveDynamicFields = options.get('canSaveDynamicFields', 1)
+
 
 class ScenarioObject:
     """
@@ -377,6 +394,28 @@ class Scenario:
             ret.append(road_dict)
         return ret
 
+    def _get_waypoints_list(self):
+        """
+        Gets the waypoints defined in this scenario encoded as a dict and put into
+        one list ready to be placed in the simulator.
+
+        Returns:
+            All waypoints encoded as a dict in one list.
+        """
+        ret = list()
+        for waypoint in self.waypoints:
+            wp_dict = dict(waypoint_id=waypoint.waypoint_id)
+            wp_dict['drawDebug'] = waypoint.drawDebug
+            wp_dict['directionalWaypoint'] = waypoint.directionalWaypoint
+            wp_dict['position'] = waypoint.position
+            wp_dict['scale'] = waypoint.scale
+            wp_dict['rotationMatrix'] = waypoint.rotationMatrix
+            wp_dict['canSave'] = waypoint.canSave
+            wp_dict['canSaveDynamicFields'] = waypoint.canSaveDynamicFields
+            ret.append(wp_dict)
+
+        return ret
+
     def _get_prefab(self):
         """
         Generates prefab code to describe this scenario to the simulation
@@ -390,8 +429,9 @@ class Scenario:
         vehicles = self._get_vehicles_list()
         roads = self._get_roads_list()
         objs = self._get_objects_list()
+        waypoints = self._get_waypoints_list()
 
-        return template.render(vehicles=vehicles, roads=roads, objects=objs)
+        return template.render(vehicles=vehicles, roads=roads, objects=objs, waypoints=waypoints)
 
     def _write_info_file(self):
         """
@@ -503,6 +543,14 @@ class Scenario:
         Adds a :class:`.Road` to this scenario.
         """
         self.roads.append(road)
+
+    def add_waypoint(self, waypoint):
+        """
+        Adds a :class:`.Waypoint` to this scenario.
+		Note that when using make() the ID of the waypoint
+		in the prefab will be 'waypoint_{waypoint.waypoint_id}'
+        """
+        self.waypoints.append(waypoint)
 
     def add_camera(self, camera, name):
         """
